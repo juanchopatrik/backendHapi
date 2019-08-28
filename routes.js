@@ -57,12 +57,18 @@ module.exports = [
   },
   {
     method: 'GET',
-    path: '/{param*}',
+    path: '/assets/{param*}',
     handler: {
       directory: {
         path: '.',
         index: ['index.html']
       }
     }
+  },
+
+  {
+    method: ['GET', 'POST'],//donde se va a amanejar el error  404 not.Found
+    path: '/{any*}',//es un comodin que optiene cualquier parametro, las rutas resuelven en orden
+    handler: site.notFound
   }
 ]

@@ -6,6 +6,7 @@ const path = require('path')//para agregar la ruta de forma mas segura
 const handlerbars = require('handlebars')
 const vision = require('vision')
 const routes = require('./routes')//he creado el archivo rutas
+const site = require('./controllers/site')
 
 // se conecta el servidor al puerto que elijamos
 const server = Hapi.server({
@@ -40,6 +41,9 @@ async function init () {
       layoutPath: 'views'
     })
     
+    
+    server.ext('onPreResponse', site.fileNotFound)/**ext= escucha el lifeCicle, onPreResponse= antes de que se envie la 
+    respuestas analice si se actifa el controlador filenotfound */
     server.route(routes)//route quiere decir que la ruta que va a usar el sevidor son las que estan al el archivo routes
     
 

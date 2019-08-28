@@ -9,10 +9,16 @@ async function createUser (req, h) {
     result = await users.create(req.payload)// verifica que se cree el usario y recibe los parametros en el payload
   } catch (error) {
     console.error(error)
-    return h.response('Problemas creando el usuario').code(500)
+    return h.view('register', {//view es como se constesta con vista
+      title: 'Registro',
+      error: 'Error creando el usuario'
+    })
   }
 
-  return h.response(`Usuario creado ID: ${result}`)
+  return h.view('register', {//se implementa nueva vista, register es la varible que debe ingresar en la plantilla de hbs
+    title: 'Registro',
+    success: 'Usuario creado exitosamente'
+  })
   }
   
   function logout (req, h) {
@@ -25,20 +31,36 @@ async function createUser (req, h) {
       result = await users.validateUser(req.payload)// verifica que se valide el usuario el usario y recibe los parametros en el payload
 
       if (!result) {//si no es valido
-        return h.response('Email y/o contraseña incorrecta').code(401)
+        return h.view('login', {//los dos se llaman login por que lo dos errrores se controlaran de forma simultanea
+          title: 'Login',
+          error: 'Email y/o contraseña incorrecta'
+        })
       }
 
     } catch (error) {
       console.error(error)
-      return h.response('Problemas validando el usuario').code(500)
+      return h.view('login', {
+        title: 'Login',
+        error: 'Problemas validando el usuario'
+      })
     }
+    //creación de cookie
     return h.redirect('/').state('user', {//si existe se enviá al home, state(user)user es el nombre de la cooke
       name: result.name, //la cookie tiene el nombre y el correo
       email: result.email
     })
   }
   function failValidation (req, h, err) {
-    return Boom.badRequest('Falló la validación', req.payload)//req.payload es lo que esta validado
+    const templates = {
+      '/create-user': 'register',/**la acción que se ejecuta en el registro */
+      '/validate-user': 'login'/**acción del login */
+    }
+  
+    return h.view(templates[req.path], {//req.path = accedo a la ruta del error
+      title: 'Error de validación',
+      error: 'Por favor complete los campos requeridos'
+    }).code(400).takeover()/*apica a que error se va a aplicar.takeover= me permite finalizar el ciclo de vida 
+    del request y activar el handler de error.Se salta los otros pasos del lif cicle*/
   }
 
   module.exports = {
