@@ -14,6 +14,18 @@ class Questions {
 
     return question.key//
   }
+  async getLast (amount) {/**ultima pregunta */
+    const query = await this.collection.limitToLast(amount).once('value')/**limitTolast= ultima pregunta hecha. once('value')
+    =esperamos un valor cuando se resuelva la promesa   */
+    const data = query.val()//convertimos la consulta en un valor
+    return data
+  }
+
+  async getOne (id) {
+    const query = await this.collection.child(id).once('value')
+    const data = query.val()
+    return data
+  }
 }
 
 module.exports = Questions

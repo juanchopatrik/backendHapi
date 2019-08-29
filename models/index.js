@@ -11,7 +11,9 @@ firebase.initializeApp({
 const db = firebase.database()//se inicializa la base de datos, crea la colección
 
 const Users = require('./users')//es donde se crea un nuevo usuario
+const Questions = require('./questions')
 
 module.exports = {
-  users: new Users(db)//nuevo usuario encriptado y se activa cuando se crea la colección
+  users: new Users(db),//nuevo usuario encriptado y se activa cuando se crea la colección
+  questions: new Questions(db)
 }

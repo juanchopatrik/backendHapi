@@ -2,6 +2,7 @@
 const Joi = require('joi')// se usa par poner esquemas a los datos que ingresan
 const site = require('./controllers/site')
 const user = require('./controllers/user')
+const question = require('./controllers/question')
 
 module.exports = [
   {
@@ -35,12 +36,25 @@ module.exports = [
     path: '/login',
     handler: site.login
   },
+
+  {
+    method: 'GET',
+    path: '/question/{id}',//id me permite con params extraer los valores de esa variable
+    handler: site.viewQuestion
+  },
   
   {
     method: 'GET',
     path: '/logout',
     handler: user.logout
   },
+
+  {
+    method: 'GET',
+    path: '/ask',
+    handler: site.ask
+  }, 
+
   {
     path: '/validate-user',
     method: 'POST',
@@ -54,6 +68,20 @@ module.exports = [
       }
     },
     handler: user.validateUser
+  },
+  {
+    path: '/create-question',
+    method: 'POST',
+    options: {
+      validate: {
+        payload: {
+          title: Joi.string().required(),
+          description: Joi.string().required()
+        },
+        failAction: user.failValidation
+      }
+    },
+    handler: question.createQuestion
   },
   {
     method: 'GET',

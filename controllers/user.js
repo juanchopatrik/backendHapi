@@ -53,7 +53,8 @@ async function createUser (req, h) {
   function failValidation (req, h, err) {
     const templates = {
       '/create-user': 'register',/**la acción que se ejecuta en el registro */
-      '/validate-user': 'login'/**acción del login */
+      '/validate-user': 'login',/**acción del login */
+      '/create-question': 'ask' //si hay problemas de validación nos manda ala plantilla preguntar
     }
   
     return h.view(templates[req.path], {//req.path = accedo a la ruta del error

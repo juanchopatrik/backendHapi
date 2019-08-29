@@ -24,7 +24,7 @@ async function init () {
   try {
     await server.register(inert)//siempre que se use inert=h.file hay que registrarlo por que no quda local
     await server.register(vision)//tambien vision es un plugin, tambien hay que registrar
-
+    /**Inicio de Cookie */
     server.state('user', {//se pone obligatoriamente para activar una cookie
       ttl: 1000 * 60 * 60 * 24 * 7,//la sesion durara abierta por 7 dias
       isSecure: process.env.NODE_ENV === 'prod',//el enviroment es de producción es seguro si es desarrollo
