@@ -1,5 +1,6 @@
 'use strict'
 
+const good = require('good')
 const handlerbars = require('./lib/helpers')
 const Hapi = require('hapi')
 const inert = require('inert')//permite agregar un archivo como ruta
@@ -31,6 +32,21 @@ async function init () {
   try {
     await server.register(inert)//siempre que se use inert=h.file hay que registrarlo por que no quda local
     await server.register(vision)//tambien vision es un plugin, tambien hay que registrar
+    await server.register({/* */
+      plugin: good,
+      options: {
+        reporters: {/*imprimir en consola */
+          console: [
+            {
+              module: 'good-console'
+            },
+            'stdout'//salida estandard
+          ]
+        }
+      }
+    })
+    
+    
     server.method('setAnswerRight', methods.setAnswerRight)/**registrar con el nombre, el metodo de servidor registrado en los requires */
     server.method('getLast', methods.getLast, {
       cache: {/**cacheando el resultado de home por un minuto */
@@ -68,15 +84,15 @@ async function init () {
     process.exit(1)
   }
 
-  console.log(`Servidor lanzado en: ${server.info.uri}`)
+  server.log('info', `Servidor lanzado en: ${server.info.uri}`)
 }
 
 process.on('unhandledRejection', error => {//recibe todas las promesas no controladas
-  console.error('UnhandledRejection', error.message, error)// 
+  server.log('UnhandledRejection', error)
 })
 
 process.on('unhandledException', error => {//error general de todo el sistema
-  console.error('unhandledException', error.message, error)
+  server.log('unhandledException', error)
 })
 
 init()
