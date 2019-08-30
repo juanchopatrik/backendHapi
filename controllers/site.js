@@ -70,7 +70,7 @@ const questions = require('../models/index').questions
 
   function fileNotFound (req, h) {
     const response = req.response/**obteniendo el objeto response del req.  */
-    if (response.isBoom && response.output.statusCode === 404) {/** es  la forma de interceptar el error*/
+    if (!req.path.startsWith('/api') && response.isBoom && response.output.statusCode === 404) {/** es  la forma de interceptar el error*/
       return h.view('404', {}, { layout: 'error-layout' }).code(404)
     }
   

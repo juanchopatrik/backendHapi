@@ -45,6 +45,13 @@ async function init () {
         }
       }
     })
+
+    await server.register({
+      plugin: require('./lib/api'),
+      options: {
+        prefix: 'api'
+      }
+    })
     
     
     server.method('setAnswerRight', methods.setAnswerRight)/**registrar con el nombre, el metodo de servidor registrado en los requires */
