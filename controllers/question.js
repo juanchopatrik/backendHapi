@@ -19,6 +19,19 @@ async function createQuestion (req, h) {
   return h.response(`Pregunta creada con el ID ${result}`)
 }
 
+async function answerQuestion (req, h) {
+  let result
+  try {
+    result = await questions.answer(req.payload, req.state.user)/**requiere el payload que viene x routes y el usario que viene de la cookie */
+    console.log(`Respuesta creada: ${result}`)
+  } catch (error) {
+    console.error(error)
+  }
+
+  return h.redirect(`/question/${req.payload.id}`)/**redirecionamos el usuario a la pregunta que contesto */
+}
+
 module.exports = {
-  createQuestion: createQuestion
+  createQuestion: createQuestion,
+  answerQuestion: answerQuestion
 }

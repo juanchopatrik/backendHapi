@@ -1,12 +1,19 @@
 'use strict'
 
+const handlerbars = require('./lib/helpers')
 const Hapi = require('hapi')
 const inert = require('inert')//permite agregar un archivo como ruta
 const path = require('path')//para agregar la ruta de forma mas segura
-const handlerbars = require('handlebars')
 const vision = require('vision')
 const routes = require('./routes')//he creado el archivo rutas
 const site = require('./controllers/site')
+const methods = require('./lib/methods')
+
+
+handlerbars.registerHelper('answerNumber', (answers) => {/**contar el numero de las respuestas */
+  const keys = Object.keys(answers)
+  return keys.length/**numero de respuestas que ya tiene el objeto */
+})
 
 // se conecta el servidor al puerto que elijamos
 const server = Hapi.server({
@@ -24,6 +31,8 @@ async function init () {
   try {
     await server.register(inert)//siempre que se use inert=h.file hay que registrarlo por que no quda local
     await server.register(vision)//tambien vision es un plugin, tambien hay que registrar
+    server.method('setAnswerRight', methods.setAnswerRight)/**registrar con el nombre, el metodo de servidor registrado en los requires */
+    
     /**Inicio de Cookie */
     server.state('user', {//se pone obligatoriamente para activar una cookie
       ttl: 1000 * 60 * 60 * 24 * 7,//la sesion durara abierta por 7 dias
