@@ -8,6 +8,12 @@ module.exports = [
   {
     method: 'GET',
     path: '/',
+    options: {
+      cache: {
+        expiresIn: 1000 * 30,/**cuando expira el caché */
+        privacy: 'private'/**tenemos el caché en el lado del browser */
+      }
+    },
     handler: site.home
   },
   {
@@ -97,6 +103,13 @@ module.exports = [
       }
     },
     handler: question.answerQuestion
+  },
+
+
+  {
+    method: 'GET',
+    path: '/answer/{questionId}/{answerId}',/**la ruta recibe los dos parametros */
+    handler: question.setAnswerRight
   },
   
   {

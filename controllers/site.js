@@ -11,14 +11,8 @@ const questions = require('../models/index').questions
     })
   }*/
 
-
   async function home (req, h) {
-    let data
-    try {
-      data = await questions.getLast(10)
-    } catch (error) {
-      console.error(error)
-    }
+    const data = await req.server.methods.getLast(10)//recuperando las ultimas 10 preguntas
   
     return h.view('index', {
       title: 'home',
@@ -26,6 +20,7 @@ const questions = require('../models/index').questions
       questions: data
     })
   }
+  
   
   function register (req, h) {
     if (req.state.user) {

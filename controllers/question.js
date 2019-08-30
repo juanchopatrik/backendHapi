@@ -3,6 +3,10 @@
 const questions = require('../models/index').questions
 
 async function createQuestion (req, h) {
+  if (!req.state.user) {
+    return h.redirect('/login')
+  }
+  
   let result
   try {
     result = await questions.create(req.payload, req.state.user)/**drecibe la información del formulario y tambien el usario qu eesta en el usuario */
@@ -20,6 +24,10 @@ async function createQuestion (req, h) {
 }
 
 async function answerQuestion (req, h) {
+  if (!req.state.user) {
+    return h.redirect('/login')
+  }
+  
   let result
   try {
     result = await questions.answer(req.payload, req.state.user)/**requiere el payload que viene x routes y el usario que viene de la cookie */
@@ -31,7 +39,25 @@ async function answerQuestion (req, h) {
   return h.redirect(`/question/${req.payload.id}`)/**redirecionamos el usuario a la pregunta que contesto */
 }
 
+async function setAnswerRight (req, h) {
+  if (!req.state.user) {
+    return h.redirect('/login')
+  }
+
+  let result
+  try {
+    result = await req.server.methods.setAnswerRight(req.params.questionId, 
+    req.params.answerId, req.state.user)/**usamos metodo del servidor, los parametros que require de la ruta*/
+    console.log(result)
+  } catch (error) {
+    console.error(error)
+  }
+
+  return h.redirect(`/question/${req.params.questionId}`)/**redireciónamos a la ruta de la pregunta */
+}
+
 module.exports = {
   createQuestion: createQuestion,
-  answerQuestion: answerQuestion
+  answerQuestion: answerQuestion,
+  setAnswerRight: setAnswerRight
 }

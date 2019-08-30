@@ -32,7 +32,13 @@ async function init () {
     await server.register(inert)//siempre que se use inert=h.file hay que registrarlo por que no quda local
     await server.register(vision)//tambien vision es un plugin, tambien hay que registrar
     server.method('setAnswerRight', methods.setAnswerRight)/**registrar con el nombre, el metodo de servidor registrado en los requires */
-    
+    server.method('getLast', methods.getLast, {
+      cache: {/**cacheando el resultado de home por un minuto */
+        expiresIn: 1000 * 60,
+        generateTimeout: 2000
+      }
+    })
+
     /**Inicio de Cookie */
     server.state('user', {//se pone obligatoriamente para activar una cookie
       ttl: 1000 * 60 * 60 * 24 * 7,//la sesion durara abierta por 7 dias
