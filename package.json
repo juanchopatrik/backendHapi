@@ -25,7 +25,7 @@
     "firebase-admin": "^6.0.0",
     "good": "^8.1.2",
     "good-console": "^8.0.0",
-    "handlebars": "^4.1.2",
+    "handlebars": "^4.3.0",
     "hapi": "^18.1.0",
     "hapi-auth-basic": "^5.0.0",
     "hapi-dev-errors": "^3.2.5",
