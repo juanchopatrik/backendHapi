@@ -1,7 +1,10 @@
 'use strict'
 
+const crumb = require('crumb')
+const blankie = require('blankie')
 const good = require('good')
 const handlerbars = require('./lib/helpers')
+const hapiDevErrors = require('hapi-dev-errors')
 const Hapi = require('hapi')
 const inert = require('inert')//permite agregar un archivo como ruta
 const path = require('path')//para agregar la ruta de forma mas segura
@@ -9,6 +12,7 @@ const vision = require('vision')
 const routes = require('./routes')//he creado el archivo rutas
 const site = require('./controllers/site')
 const methods = require('./lib/methods')
+const scooter = require('@hapi/scooter')
 
 
 handlerbars.registerHelper('answerNumber', (answers) => {/**contar el numero de las respuestas */
@@ -47,9 +51,36 @@ async function init () {
     })
 
     await server.register({
+      plugin: crumb,
+      options: {
+        cookieOptions: {
+          isSecure: process.env.NODE_ENV === 'prod'
+        }
+      }
+    })
+
+    await server.register([scooter, {
+      plugin: blankie,
+      options: {
+        defaultSrc: `'self' 'unsafe-inline'`,
+        styleSrc: `'self' 'unsafe-inline' https://maxcdn.bootstrapcdn.com`,
+        fontSrc: `'self' 'unsafe-inline' data:`,
+        scriptSrc: `'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://maxcdn.bootstrapcdn.com/ https://code.jquery.com/`,
+        generateNonces: false
+      }
+    }])
+
+    await server.register({
       plugin: require('./lib/api'),
       options: {
         prefix: 'api'
+      }
+    })
+
+    await server.register({
+      plugin: hapiDevErrors,
+      options: {
+        showErrors: process.env.NODE_ENV !== 'prod'
       }
     })
     
