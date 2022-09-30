@@ -19,7 +19,7 @@
   "dependencies": {
     "@hapi/scooter": "^5.1.0",
     "bcrypt": "^3.0.6",
-    "blankie": "^4.1.1",
+    "blankie": "^5.0.0",
     "boom": "^7.3.0",
     "crumb": "^7.2.3",
     "firebase-admin": "^6.0.0",
